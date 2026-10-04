@@ -64,7 +64,7 @@ export async function getAvailableRooms(checkIn: string, checkOut: string, roomT
 }
 
 export async function createWebsiteReservation(input: WebsiteBookingInput) {
-  const db = requireSupabase();
+  const db = requireSupabase() as any;
   const { data, error } = await db.rpc('create_website_reservation', {
     p_room_type_id: input.roomTypeId,
     p_check_in: input.checkIn,
@@ -108,7 +108,7 @@ export async function signOutAdmin() {
 }
 
 export async function getPublicAvailability(checkIn: string, checkOut: string, guests: number) {
-  const db = requireSupabase();
+  const db = requireSupabase() as any;
   const { data, error } = await db.rpc('get_available_room_types', {
     p_check_in: checkIn,
     p_check_out: checkOut,
