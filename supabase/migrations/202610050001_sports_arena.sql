@@ -211,4 +211,4 @@ end;
 $$;
 
 revoke all on function public.create_public_booking(uuid,date,time,time,text,text,text,integer,text) from public;
-grant execute on function public.create_public_booking(uuid,date,time,time,text,text,text,integer,text) to anon,authenticated;
+grant execute on function public.create_public_booking(uuid,date,time,time,text,text,text,integer,text) to anon;
