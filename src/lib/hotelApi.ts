@@ -154,3 +154,56 @@ export async function updateRoomStatus(id: string, status: string) {
   if (error) throw error;
   return data;
 }
+
+
+export async function getPublishedMenuAsset() {
+  const db = requireSupabase() as any;
+  const { data, error } = await db
+    .from('media_assets')
+    .select('id,kind,storage_path,public_url,title,version,created_at')
+    .eq('kind', 'menu_pdf')
+    .eq('published', true)
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  if (error) throw error;
+  if (data?.public_url) return data;
+  if (data?.storage_path) {
+    const { data: publicData } = db.storage.from('bhola-media').getPublicUrl(data.storage_path);
+    return { ...data, public_url: publicData.publicUrl };
+  }
+  return data;
+}
+
+export async function uploadMenuPdf(file: File) {
+  const db = requireSupabase() as any;
+  if (file.type !== 'application/pdf') throw new Error('Only PDF menu files are allowed.');
+  const safeName = file.name.toLowerCase().replace(/[^a-z0-9._-]+/g, '-');
+  const path = `menu/${crypto.randomUUID()}-${safeName}`;
+  const { error: uploadError } = await db.storage.from('bhola-media').upload(path, file, {
+    contentType: 'application/pdf',
+    upsert: false,
+  });
+  if (uploadError) throw uploadError;
+  const { data: publicData } = db.storage.from('bhola-media').getPublicUrl(path);
+  const { data, error } = await db
+    .from('media_assets')
+    .insert({
+      kind: 'menu_pdf',
+      storage_path: path,
+      public_url: publicData.publicUrl,
+      title: file.name,
+      alt_text: 'Hotel Bhola Inn digital menu',
+      version: 1,
+      published: true,
+    })
+    .select('id,kind,storage_path,public_url,title,version,created_at')
+    .single();
+  if (error) throw error;
+  await db
+    .from('media_assets')
+    .update({ published: false })
+    .eq('kind', 'menu_pdf')
+    .neq('id', data.id);
+  return data;
+}
