@@ -8,7 +8,7 @@ assert.doesNotMatch(app, /<Flipbook[^>]*onUpload=\{\(\)=>\{\}\}/);
 assert.match(app, /getPublicHotelSettings/);
 assert.doesNotMatch(app, /\+ 12% tax/);
 assert.match(app, /updateHotelSettings/);
-assert.match(app, /setCalendarDate/);
+assert.match(app, /setAnchor/);
 assert.match(app, /payments/);
 assert.match(api, /export async function getPublicHotelSettings/);
 assert.match(api, /export async function updateHotelSettings/);
