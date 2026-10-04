@@ -2,9 +2,9 @@ import { useEffect, useState } from 'react';
 import { ArrowDownRight, ArrowUpRight, BedDouble, CalendarDays, Check, ChevronRight, Clock3, FileText, GalleryHorizontal, Gauge, House, LogOut, Menu, MessageSquareText, Plus, Search, Settings, ShieldCheck, Users, X, Utensils } from 'lucide-react';
 import { amenities, hotel, photos, reviews, rooms } from './data/bhola';
 import Flipbook from './components/Flipbook';
-import { calculateBookingTotal, isRoomAvailable, transitionReservation } from './lib/booking.mjs';
+import { transitionReservation } from './lib/booking.mjs';
 import { appendAudit, loadStore, saveStore } from './lib/store.mjs';
-import { loadMenu, saveMenu } from './lib/menuStore.mjs';
+import { loadMenu } from './lib/menuStore.mjs';
 import { supabase } from './lib/supabase';
 import { createWebsiteReservation, getAdminData, getPublishedMenuAsset, getPublicAvailability, signInAdmin, signOutAdmin, updateReservationStatus, updateRoomStatus, uploadMenuPdf } from './lib/hotelApi';
 
