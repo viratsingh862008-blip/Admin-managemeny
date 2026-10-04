@@ -106,3 +106,51 @@ export async function signOutAdmin() {
   const { error } = await db.auth.signOut();
   if (error) throw error;
 }
+
+export async function getPublicAvailability(checkIn: string, checkOut: string, guests: number) {
+  const db = requireSupabase();
+  const { data, error } = await db.rpc('get_available_room_types', {
+    p_check_in: checkIn,
+    p_check_out: checkOut,
+    p_guests: guests,
+  });
+  if (error) throw error;
+  return data ?? [];
+}
+
+export async function getAdminData() {
+  const db = requireSupabase() as any;
+  const [reservations, rooms, guests, payments, settings] = await Promise.all([
+    db.from('reservations').select('id,confirmation_code,check_in,check_out,guests,status,source,nightly_rate,subtotal,tax,total,notes,created_at,guest:guests(full_name,phone,email),room:rooms(id,room_number,room_type:room_types(name,slug))').order('created_at', { ascending: false }),
+    db.from('rooms').select('id,room_number,floor,status,active,room_type_id,room_type:room_types(name,slug,size_sqft,bed_description)').order('room_number'),
+    db.from('guests').select('id,full_name,phone,email,created_at,updated_at').order('created_at', { ascending: false }),
+    db.from('payments').select('id,reservation_id,amount,method,status,reference,paid_at,created_at').order('created_at', { ascending: false }),
+    db.from('hotel_settings').select('*').limit(1).maybeSingle(),
+  ]);
+  for (const result of [reservations, rooms, guests, payments, settings]) if (result.error) throw result.error;
+  return { reservations: reservations.data ?? [], rooms: rooms.data ?? [], guests: guests.data ?? [], payments: payments.data ?? [], settings: settings.data };
+}
+
+export async function updateReservationStatus(id: string, status: string) {
+  const db = requireSupabase();
+  const { data, error } = await db
+    .from('reservations')
+    .update({ status } as never)
+    .eq('id', id)
+    .select('id,status')
+    .single();
+  if (error) throw error;
+  return data;
+}
+
+export async function updateRoomStatus(id: string, status: string) {
+  const db = requireSupabase();
+  const { data, error } = await db
+    .from('rooms')
+    .update({ status } as never)
+    .eq('id', id)
+    .select('id,status')
+    .single();
+  if (error) throw error;
+  return data;
+}
