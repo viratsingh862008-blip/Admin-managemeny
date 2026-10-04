@@ -5,6 +5,11 @@ const app = fs.readFileSync('src/App.tsx', 'utf8');
 const api = fs.readFileSync('src/lib/hotelApi.ts', 'utf8');
 
 assert.doesNotMatch(app, /<Flipbook[^>]*onUpload=\{\(\)=>\{\}\}/);
+const flip = fs.readFileSync('src/components/Flipbook.tsx', 'utf8');
+assert.match(flip, /onUpload\?'Upload the current menu PDF':'Digital menu not published yet'/);
+assert.doesNotMatch(flip, /Upload the menu once in Admin/);
+assert.doesNotMatch(app, /admin-uploaded PDF/);
+assert.doesNotMatch(app, /Upload the current menu PDF/);
 assert.match(app, /getPublicHotelSettings/);
 assert.doesNotMatch(app, /\+ 12% tax/);
 assert.match(app, /updateHotelSettings/);
