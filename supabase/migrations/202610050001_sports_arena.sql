@@ -74,7 +74,7 @@ create table public.bookings(
   id uuid primary key default gen_random_uuid(),
   booking_code text not null unique default('BK-'||upper(substr(replace(gen_random_uuid()::text,'-',''),1,8))),
   facility_id uuid not null references public.facilities(id) on delete restrict,
-  booking_date date not null check(booking_date>=current_date),
+  booking_date date not null,
   start_time time not null,
   end_time time not null,
   customer_name text not null,
