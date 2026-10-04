@@ -35,7 +35,7 @@ export async function getAvailableRooms(checkIn: string, checkOut: string, roomT
   const { data: rooms, error } = await query.order('room_number');
   if (error) throw error;
 
-  const roomIds = (rooms ?? []).map((room) => room.id);
+  const roomIds = (rooms ?? []).map((room: { id: string }) => room.id);
   if (!roomIds.length) return [];
 
   const [{ data: bookings, error: bookingError }, { data: blocks, error: blockError }] = await Promise.all([
@@ -56,11 +56,11 @@ export async function getAvailableRooms(checkIn: string, checkOut: string, roomT
   if (blockError) throw blockError;
 
   const blockedIds = new Set([
-    ...(bookings ?? []).map((row) => row.room_id),
-    ...(blocks ?? []).map((row) => row.room_id),
+    ...(bookings ?? []).map((row: { room_id: string }) => row.room_id),
+    ...(blocks ?? []).map((row: { room_id: string }) => row.room_id),
   ]);
 
-  return (rooms ?? []).filter((room) => !blockedIds.has(room.id));
+  return (rooms ?? []).filter((room: { id: string }) => !blockedIds.has(room.id));
 }
 
 export async function createWebsiteReservation(input: WebsiteBookingInput) {
