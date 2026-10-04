@@ -21,6 +21,7 @@ export type Database = {
       calculate_reservation_total: { Args:{ p_room_type_id:string; p_check_in:string; p_check_out:string; p_guests?:number }; Returns:{ nights:number; nightly_rate:number; subtotal:number; tax:number; total:number }[] };
       create_website_reservation: { Args:{ p_room_type_id:string; p_check_in:string; p_check_out:string; p_guests:number; p_full_name:string; p_phone:string; p_email?:string|null; p_notes?:string|null }; Returns:{ reservation_id:string; confirmation_code:string; room_number:string; room_type:string; check_in:string; check_out:string; total:number }[] };
       is_hotel_staff: { Args:Record<string, never>; Returns:boolean };
+      get_available_room_types: { Args:{ p_check_in:string; p_check_out:string; p_guests?:number }; Returns:{ id:string; name:string; slug:string; description:string|null; max_guests:number; size_sqft:number; base_price:number; bed_description:string|null; available_rooms:number }[] };
     };
     Enums: {
       booking_status:'pending'|'confirmed'|'checked_in'|'in_house'|'checked_out'|'cancelled'|'no_show';
