@@ -23,7 +23,7 @@ export async function getRoomTypes() {
 }
 
 export async function getAvailableRooms(checkIn: string, checkOut: string, roomTypeId?: string) {
-  const db = requireSupabase();
+  const db = requireSupabase() as any;
   let query = db
     .from('rooms')
     .select('id,room_number,room_type_id,status,room_types!inner(name,slug,base_price,max_guests,size_sqft,bed_description)')
