@@ -205,7 +205,7 @@ begin
  begin
   return query insert into public.bookings(facility_id,booking_date,start_time,end_time,customer_name,phone,email,participants,amount)
   values(p_facility_id,p_booking_date,p_start_time,p_end_time,trim(p_customer_name),trim(p_phone),nullif(trim(p_email),''),p_participants,v_price)
-  returning id,booking_code,amount;
+  returning public.bookings.id,public.bookings.booking_code,public.bookings.amount;
  exception when unique_violation then raise exception 'Selected slot is already booked';end;
 end;
 $$;
