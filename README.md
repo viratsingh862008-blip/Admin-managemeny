@@ -1,26 +1,47 @@
-# Hotel Bhola Inn — Website + Admin Management
+# Sports Arena Booking
 
-WebTea HQ hospitality website and booking-management prototype for Hotel Bhola Inn, Bettiah.
+Clean rebuild of the repository for a professional turf, pool and ground booking platform.
 
-See docs/BHOLA-INN-RESEARCH.md for the research record and docs/PDF-MENU-FLIPBOOK-SKILL.md for the reusable PDF-to-flipbook implementation pattern.
+## Public website
 
-## Local
-npm install
-npm run test
-npm run typecheck
-npm run build
-npm run dev
+- Live facilities from Supabase
+- Date + facility availability
+- Slot-level prices
+- Public booking flow
+- Automatic availability refresh
+- Admin-controlled settings reflected on the public site
 
-Website: /
-Admin: /#admin
+## Admin
 
-## Scope
-Public hotel site, room discovery, reservation flow, admin dashboard, room inventory, availability, housekeeping, guest CRM, payments/folio view, reviews, media/CMS, settings, audit log, and PDF menu flipbook.
+Route: #admin
 
-The current persistence layer is browser-local for prototyping. Commercial deployment should connect the domain layer to a transactional server/database and object storage for menus/media.
+Username: Aryan
+Password: Aryan
 
+The login uses Supabase Auth. Change the bootstrap password after launch.
 
-## Live backend
-The Hotel Bhola Inn app is backed by a dedicated Supabase project in `ap-south-1`.
-Required Vite variables are `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY`.
-Admin access uses Supabase Auth plus `staff_profiles`; public reservations use the atomic `create_website_reservation` RPC.
+Admin controls:
+- facilities: add/edit/activate/pause/delete
+- recurring weekly slot schedules
+- per-slot start/end times
+- per-slot pricing
+- date-specific closures
+- date-specific special slots
+- date-specific price overrides
+- booking workflow
+- public business settings
+
+## Data model
+
+facility_settings = public branding and settings
+facilities = turf/pool/ground inventory
+slot_templates = recurring weekly schedule and prices
+date_overrides = one-off closures and special slots
+bookings = reservations
+audit_logs = administrator activity trail
+
+Public users cannot insert directly into bookings. Public booking uses the validated create_public_booking RPC.
+
+## Versions
+
+Pinned package versions were checked against current package registries on 2026-10-05: React 19.3.0, Vite 8.3.2, TypeScript 7.0.2, Supabase JS 2.117.2, Lucide React 1.52.0 and @vitejs/plugin-react 6.1.1.

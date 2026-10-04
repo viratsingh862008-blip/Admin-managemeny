@@ -1,8 +1,0 @@
-import test from 'node:test';
-import assert from 'node:assert/strict';
-import { calculateBookingTotal, isRoomAvailable, nightsBetween, rangesOverlap, transitionReservation } from '../src/lib/booking.mjs';
-test('nightsBetween counts hotel nights and rejects reversed dates',()=>{ assert.equal(nightsBetween('2026-10-04','2026-10-07'),3); assert.throws(()=>nightsBetween('2026-10-07','2026-10-04')); });
-test('date ranges overlap using checkout as exclusive endpoint',()=>{ assert.equal(rangesOverlap('2026-10-04','2026-10-06','2026-10-06','2026-10-08'),false); assert.equal(rangesOverlap('2026-10-04','2026-10-07','2026-10-06','2026-10-08'),true); });
-test('availability rejects an overlapping blocking reservation',()=>{ const reservations=[{roomId:'deluxe-101',status:'confirmed',checkIn:'2026-10-04',checkOut:'2026-10-07'}]; assert.equal(isRoomAvailable('deluxe-101','2026-10-06','2026-10-08',reservations),false); assert.equal(isRoomAvailable('deluxe-101','2026-10-07','2026-10-08',reservations),true); });
-test('pricing returns subtotal and tax for multi-night stay',()=>{ assert.deepEqual(calculateBookingTotal(2200,'2026-10-04','2026-10-07',1,12),{nights:3,subtotal:6600,tax:792,total:7392}); });
-test('reservation transitions enforce the state machine',()=>{ assert.equal(transitionReservation('pending','confirmed'),'confirmed'); assert.equal(transitionReservation('confirmed','checked-in'),'checked-in'); assert.throws(()=>transitionReservation('pending','checked-out')); assert.equal(transitionReservation('confirmed','cancelled'),'cancelled'); });

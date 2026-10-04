@@ -1,0 +1,20 @@
+import test from 'node:test'
+import assert from 'node:assert/strict'
+import fs from 'node:fs'
+const app=fs.readFileSync('src/App.tsx','utf8')
+const migration=fs.readFileSync('supabase/migrations/202610050001_sports_arena.sql','utf8')
+const pkg=JSON.parse(fs.readFileSync('package.json','utf8'))
+assert.doesNotMatch(app,/Hotel Bhola|Bhola Inn|hotel_bhola|Flipbook|menu_pdf/)
+assert.match(app,/Sports Turf/)
+assert.match(app,/Swimming Pool/)
+assert.match(app,/Sports Ground/)
+assert.match(app,/Weekly schedule/)
+assert.match(app,/Overrides & closures/)
+assert.match(app,/Bookings/)
+assert.match(app,/Aryan/)
+assert.match(app,/Live database/)
+assert.match(migration,/create_public_booking/)
+assert.match(migration,/get_public_slots/)
+assert.match(migration,/row level security/i)
+assert.equal(pkg.devDependencies['@vitejs/plugin-react'],'6.1.1')
+console.log('sports arena replacement contract passed')

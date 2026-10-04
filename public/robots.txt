@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-Disallow: /admin
-Sitemap: https://hotel-bhola-inn.vercel.app/sitemap.xml

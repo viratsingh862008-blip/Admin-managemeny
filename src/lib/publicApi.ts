@@ -1,0 +1,5 @@
+import {db} from './supabase'
+export async function getSettings(){const {data,error}=await db().from('facility_settings').select('*').limit(1).maybeSingle();if(error)throw error;return data}
+export async function getFacilities(){const {data,error}=await db().from('facilities').select('*').eq('active',true).order('sort_order');if(error)throw error;return data||[]}
+export async function getSlots(date:string,facilityId:string){const {data,error}=await db().rpc('get_public_slots',{p_date:date,p_facility_id:facilityId});if(error)throw error;return data||[]}
+export async function createBooking(input:any){const {data,error}=await db().rpc('create_public_booking',{p_facility_id:input.facilityId,p_booking_date:input.date,p_start_time:input.start,p_end_time:input.end,p_customer_name:input.name,p_phone:input.phone,p_email:input.email||null,p_participants:Number(input.participants),p_notes:input.notes||null});if(error)throw error;return Array.isArray(data)?data[0]:data}
