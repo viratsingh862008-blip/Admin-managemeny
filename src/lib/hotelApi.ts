@@ -55,6 +55,21 @@ export async function signOutAdmin() {
   if (error) throw error;
 }
 
+export async function getPublicHotelSettings() {
+  const db = requireSupabase() as any;
+  const { data, error } = await db.from('hotel_settings').select('id,name,city,address,phone,check_in,check_out,tax_percent,timezone').limit(1).maybeSingle();
+  if (error) throw error;
+  return data;
+}
+
+export async function updateHotelSettings(id: string, patch: {name: string; phone?: string|null; address: string; check_in: string; check_out: string}) {
+  const db = requireSupabase() as any;
+  if (!id) throw new Error('Hotel settings record is missing.');
+  const { data, error } = await db.from('hotel_settings').update({...patch, updated_at: new Date().toISOString()}).eq('id', id).select('*').single();
+  if (error) throw error;
+  return data;
+}
+
 export async function getPublicAvailability(checkIn: string, checkOut: string, guests: number) {
   const db = requireSupabase() as any;
   const { data, error } = await db.rpc('get_available_room_types', {
