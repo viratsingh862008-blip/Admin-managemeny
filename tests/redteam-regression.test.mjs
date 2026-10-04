@@ -12,5 +12,10 @@ assert.match(app, /setAnchor/);
 assert.match(app, /payments/);
 assert.match(api, /export async function getPublicHotelSettings/);
 assert.match(api, /export async function updateHotelSettings/);
+const html = fs.readFileSync('index.html', 'utf8');
+assert.match(html, /rel="canonical"/);
+assert.match(html, /property="og:title"/);
+assert.match(html, /name="robots"/);
+assert.match(html, /favicon\.svg/);
 
 console.log('red-team regression contracts: public upload, dynamic tax, settings persistence, calendar state, payment-backed data');
